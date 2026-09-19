@@ -33,7 +33,6 @@ function toRPN(tokens) {
             nextOperand = true; 
         }
 
-        // Updated contract to 'paren'
         else if (token.type === 'paren' && token.value === '(') {
             if (!nextOperand) {
                 throw new Error(`Unexpected opening parenthesis. Missing operator?`);
@@ -42,7 +41,6 @@ function toRPN(tokens) {
             nextOperand = true; 
         }
 
-        // Updated contract to 'paren'
         else if (token.type === 'paren' && token.value === ')') {
             if (nextOperand) {
                 throw new Error(`Unexpected closing parenthesis. Empty group or missing operand?`);
