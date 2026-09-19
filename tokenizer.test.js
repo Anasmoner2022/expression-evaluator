@@ -7,16 +7,28 @@ assert.deepEqual(tokenize('3\t+\n4'), [
     { type: 'number', value: 4 }
 ]);
 
+assert.deepEqual(tokenize('3\r\n+4'), [
+    { type: 'number', value: 3 },
+    { type: 'operator', value: '+' },
+    { type: 'number', value: 4 }
+]);
+
+assert.deepEqual(tokenize('3\u00a0+4'), [
+    { type: 'number', value: 3 },
+    { type: 'operator', value: '+' },
+    { type: 'number', value: 4 }
+]);
+
 assert.deepEqual(tokenize('12 + 3.5 * (2 - 1)'), [
     { type: 'number', value: 12 },
     { type: 'operator', value: '+' },
     { type: 'number', value: 3.5 },
     { type: 'operator', value: '*' },
-    { type: 'parenthesis', value: '(' },
+    { type: 'paren', value: '(' },
     { type: 'number', value: 2 },
     { type: 'operator', value: '-' },
     { type: 'number', value: 1 },
-    { type: 'parenthesis', value: ')' }
+    { type: 'paren', value: ')' }
 ])
 assert.throws(() => tokenize('1.2.3'), /Malformed number: multiple decimals/);
 assert.throws(() => tokenize('12..5'), /Malformed number: multiple decimals/ )

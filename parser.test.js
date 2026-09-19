@@ -4,7 +4,7 @@ const { toRPN } = require('./parser');
 // Helper to quickly generate mock tokens
 const tNum = (val) => ({ type: 'number', value: val });
 const tOp = (val) => ({ type: 'operator', value: val });
-const tPar = (val) => ({ type: 'parenthesis', value: val });
+const tPar = (val) => ({ type: 'paren', value: val });
 
 // 1. Nested groups & normal evaluation: 8 / (4 - 2) + 3
 const nestedInput = [tNum(8), tOp('/'), tPar('('), tNum(4), tOp('-'), tNum(2), tPar(')'), tOp('+'), tNum(3)];
@@ -30,9 +30,14 @@ assert.throws(() => toRPN([tOp('*'), tNum(3)]), /Unexpected operator/);         
 assert.throws(() => toRPN([tPar('('), tNum(1)]), /extra '\('/);                      // (1
 assert.throws(() => toRPN([tNum(1), tPar(')')]), /extra '\)'/);                      // 1)
 
+assert.throws(
+    () => toRPN([{ type: 'unsupported_type', value: '?' }]), 
+    /unrecognized token type in parser/
+);
+
 // 5. Verifying original tokens are unchanged (strict equality on object references)
 const tokenRef = tNum(42);
-const parsedOutput = toRPN([tokenRef]);
+const parsedOutput = parse([tokenRef]);
 assert.equal(parsedOutput[0], tokenRef); 
 
 console.log('Parser grammar and output checks passed');
