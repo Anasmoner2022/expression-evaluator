@@ -10,7 +10,7 @@ function tokenize(input) {
         let ch = input[i];
 
         // 1. Whitespace handling
-        if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r' || ch === '\u00a0') {
+        if (/\s/.test(ch)) {
             i++;
             continue;
         }

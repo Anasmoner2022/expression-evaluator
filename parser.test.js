@@ -35,9 +35,13 @@ assert.throws(
     /unrecognized token type in parser/
 );
 
-// 5. Verifying original tokens are unchanged (strict equality on object references)
+// 5. Preserve token identity and verify deep input immutability
 const tokenRef = tNum(42);
-const parsedOutput = parse([tokenRef]);
+const parsedOutput = toRPN([tokenRef]);
 assert.equal(parsedOutput[0], tokenRef); 
 
+assert.throws(() => toRPN([]), /Expression ended unexpectedly/);
+const inputSnapshot = structuredClone(nestedInput);
+toRPN(nestedInput);
+assert.deepEqual(nestedInput, inputSnapshot);
 console.log('Parser grammar and output checks passed');

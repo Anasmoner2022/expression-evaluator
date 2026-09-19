@@ -32,7 +32,7 @@ node cli.test.js
 * **Numbers:** Integers (`42`) and finite decimals (`3.14`).
 * **Operators:** Addition (`+`), Subtraction (`-`), Multiplication (`*`), Division (`/`).
 * **Grouping:** Parentheses `()` for precedence override.
-* **Whitespace:** Spaces, tabs, and newlines are safely ignored between tokens.
+* **Whitespace:** All JavaScript whitespace characters (`\s`), including spaces, tabs, carriage returns, and newlines, are ignored between tokens.
 
 **Decimal Policy:**
 Decimals are strictly validated. A number must have at least one digit before and after the decimal point. Expressions like `1.2.3`, `.5`, and `5.` will be rejected as structural syntax errors.
@@ -69,5 +69,5 @@ During Milestone 3, a defect was identified in the Evaluator where subtraction, 
 ## Limitations
 
 * **Floating-Point Arithmetic:** Because JavaScript utilizes IEEE 754 double-precision 64-bit floats, base-10 fractional math is subject to minor precision loss (e.g., `0.1 + 0.2` evaluates to `0.30000000000000004`). The evaluator allows this normal JS behavior. Our test suite handles this by verifying results fall within an absolute tolerance (`< 1e-12`), rather than asserting strict equality.
-* **Hardware Overflows:** Multiplying two massive numbers (e.g., `Number.MAX_VALUE * 2`) exceeds memory ceilings. The evaluator rejects the resulting `Infinity` with a non-finite arithmetic error.
+* **Numeric Overflow:** Multiplying two massive numbers (e.g., `Number.MAX_VALUE * 2`) exceeds the finite range representable by JavaScript Number. The evaluator rejects the resulting `Infinity` with a non-finite arithmetic error.
 * **Future Work:** Adding support for negative numbers (unary minus), exponents (`^`), and trigonometric functions (`sin`, `cos`) would require modifying both the Tokenizer (to identify unary minus vs subtraction) and the Parser (to handle right-associative operations like exponents).

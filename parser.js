@@ -71,7 +71,7 @@ function toRPN(tokens) {
         }
     }
 
-    if (tokens.length > 0 && nextOperand) {
+    if (nextOperand) {
         throw new Error("Expression ended unexpectedly. Missing right operand.");
     }
 

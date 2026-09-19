@@ -23,7 +23,7 @@ assert.throws(() => evaluateRPN([tNum(5), tNum(0), tOp('/')]), /Division by zero
 
 // 3. Ensuring no input mutation
 const inputRPN = [tNum(10), tNum(2), tOp('-')];
-const inputCopy = [...inputRPN];
+const inputCopy = structuredClone(inputRPN);
 evaluateRPN(inputRPN);
 assert.deepEqual(inputRPN, inputCopy); // Verifies the array remains completely untouched
 

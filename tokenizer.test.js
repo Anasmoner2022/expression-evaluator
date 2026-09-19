@@ -32,10 +32,17 @@ assert.deepEqual(tokenize('12 + 3.5 * (2 - 1)'), [
 ])
 assert.throws(() => tokenize('1.2.3'), /Malformed number: multiple decimals/);
 assert.throws(() => tokenize('12..5'), /Malformed number: multiple decimals/ )
-assert.throws(() => tokenize('5.', /Malformed number: missing trailing digit/))
+assert.throws(() => tokenize('5.'), /Malformed number: missing trailing digit/);
 assert.throws(() => tokenize('.5'), /Malformed number: missing leading digit/)
 assert.throws(() => tokenize('.'), /Malformed number: missing leading digit/)
 
 assert.throws(() => tokenize(null), /Invalid input: must be a string/)
-assert.throws(() => tokenize('12 $ 3', /Invalid character/))
+assert.throws(() => tokenize('12 $ 3'), /Invalid character/);
+for (const whitespace of ['\f', '\v', '\u2003', '\u2028', '\ufeff']) {
+    assert.deepEqual(tokenize('3' + whitespace + '+4'), [
+        { type: 'number', value: 3 },
+        { type: 'operator', value: '+' },
+        { type: 'number', value: 4 }
+    ]);
+}
 console.log('Tokenizer checks passed');
