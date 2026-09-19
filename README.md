@@ -71,23 +71,3 @@ During Milestone 3, a defect was identified in the Evaluator where subtraction, 
 * **Floating-Point Arithmetic:** Because JavaScript utilizes IEEE 754 double-precision 64-bit floats, base-10 fractional math is subject to minor precision loss (e.g., `0.1 + 0.2` evaluates to `0.30000000000000004`). The evaluator allows this normal JS behavior. Our test suite handles this by verifying results fall within an absolute tolerance (`< 1e-12`), rather than asserting strict equality.
 * **Hardware Overflows:** Multiplying two massive numbers (e.g., `Number.MAX_VALUE * 2`) exceeds memory ceilings. The evaluator rejects the resulting `Infinity` with a non-finite arithmetic error.
 * **Future Work:** Adding support for negative numbers (unary minus), exponents (`^`), and trigonometric functions (`sin`, `cos`) would require modifying both the Tokenizer (to identify unary minus vs subtraction) and the Parser (to handle right-associative operations like exponents).
-
-```
-
----
-
-### Review Submission Notes for the Evaluator 
-
-**One Trace (Novel Expression):** `(2 + 4) * 3`
-1. *Tokenizer:* `[ {type:'parenthesis', value:'('}, {type:'number', value:2}, {type:'operator', value:'+'}, {type:'number', value:4}, {type:'parenthesis', value:')'}, {type:'operator', value:'*'}, {type:'number', value:3} ]`
-2. *Parser:* Yields RPN `[ 2, 4, +, 3, * ]`. (The `+` gets pushed out by the `)` barrier release).
-3. *Evaluator:* Pushes 2, pushes 4. Sees `+`, pops 4, pops 2, pushes 6. Pushes 3. Sees `*`, pops 3, pops 6, pushes 18. Output: `18`.
-
-**Rejecting a novel invalid expression independently:** `2 + / 3`
-1. *Tokenizer:* Converts happily to `[2, +, /, 3]`. No errors.
-2. *Parser:* Sees `2` (expects operator). Sees `+` (expects number). Sees `/`. *CRASH*. The grammar state expected a number or `(`, but got an operator. It throws `Unexpected operator '/'` immediately, preventing the garbage tokens from ever reaching the Evaluator.
-
-**One Tradeoff:** 
-Forcing explicit decimals (rejecting `.5` and `5.`). We traded slightly higher user friction for extreme parser safety. By strictly requiring digits on both sides of a decimal, the tokenizer's inner loops are heavily simplified and we eliminate edge cases where consecutive periods (`..`) or trailing operator collisions could accidentally slip past string-to-number casting.
-
-```
